@@ -1,0 +1,52 @@
+{% extends "layouts/default.twig" %}
+
+{% block head %}
+    <link href="{{ Url_phile('plugins/siezi/phileAdminPages/public/vendor/bootstrap-markdown/bootstrap-markdown.min.css') }}"
+          rel="stylesheet">
+    <script src="{{ Url_phile('plugins/siezi/phileAdminPages/public/vendor/bootstrap-markdown/bootstrap-markdown.js') }}"></script>
+    <script src="{{ Url_phile('plugins/siezi/phileAdminPages/public/vendor/marked/marked.js') }}"></script>
+{% endblock %}
+
+{% block breadcrump %}
+    <li><a href="{{ Url_backend('pages/') }}">Pages</a></li>
+    <li class="active">Edit</li>
+{% endblock %}
+
+{% block content %}
+    <form action="#" method="post">
+        <div class="form-group">
+            {{ form_widget(form.content, {'attr': {'class': 'form-control'}}) }}
+        </div>
+        <input type="submit" name="submit" class="btn btn-primary" value="{{ 'siezi.phileAdminPages.btn.savePage'|trans }}"/>
+    </form>
+
+    <script>
+        $("#form_content").markdown({
+            autofocus: true,
+            savable: false,
+            fullscreen: {
+                enable: false
+            },
+            resize: 'vertical',
+            additionalButtons: [
+                [{
+                     name: "groupCustom",
+                     data: [{
+                                name: 'cmdView',
+                                toggle: true,
+                                title: '{{ 'siezi.phileAdminPages.btn.view'|trans }}',
+                                btnText: '{{ 'siezi.phileAdminPages.btn.view'|trans }}',
+                                btnClass: 'btn btn-primary btn-sm',
+                                callback: function(e) {
+                                    // Check the preview mode and toggle based on this flag
+                                    var url = '{{ Url_phile(url) }}';
+                                    var win = window.open(url, '_blank');
+                                    win.focus();
+                                }
+                            }]
+                 }]
+            ]
+        });
+    </script>
+
+{% endblock %}

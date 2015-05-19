@@ -1,0 +1,19 @@
+{
+  "name": "siezi-phileAdminPages",
+  "install": {
+    "path": "public/vendor",
+    "sources": {
+      "bootstrap": [],
+      "jquery": [],
+      "bootstrap-sortable": [
+        "bower_components/bootstrap-sortable/Contents/bootstrap-sortable.css",
+        "bower_components/bootstrap-sortable/Scripts/bootstrap-sortable.js"
+      ]
+    }
+  },
+  "dependencies": {
+    "bootstrap-markdown": "~2.9.0",
+    "marked": "~0.3.3",
+    "bootstrap-sortable": "~1.11.2"
+  }
+}
