@@ -1,6 +1,6 @@
 <?php
 
-namespace Phile\Plugin\Siezi\PhileAdminMarkdownEditor;
+namespace Phile\Plugin\Siezi\PhileAdminMarkdownEditor\Lib;
 
 use Phile\Core\ServiceLocator;
 use Phile\Exception;
