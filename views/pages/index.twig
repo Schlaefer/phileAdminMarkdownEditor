@@ -5,13 +5,12 @@
 {% endblock %}
 
 {% block head %}
-    <link href="{{ Url_phile('plugins/siezi/phileAdminMarkdownEditor/public/vendor/bootstrap-sortable/bootstrap-sortable.css') }}" rel="stylesheet">
-    <script src="{{ Url_phile('plugins/siezi/phileAdminMarkdownEditor/public/vendor/bootstrap-sortable/bootstrap-sortable.js') }}"></script>
+    <script src="{{ Url_phile('plugins/siezi/phileAdminMarkdownEditor/public/vendor/jquery.tablesorter/jquery.tablesorter.combined.js') }}"></script>
 {% endblock %}
 
 {% block content %}
     <div class="container">
-        <table class="table table-hover sortable">
+        <table class="table table-hover tablesorter">
             <thead>
             <th>
                 {{ 'siezi.phileAdminPages.label.title'|trans }}
@@ -22,7 +21,7 @@
             <th>
                 {{ 'siezi.phileAdminPages.label.date'|trans }}
             </th>
-            <th data-defaultsort='disabled'>
+            <th data-sorter="false" data-filter="false">
                 {{ 'siezi.phileAdminPages.label.action'|trans }}
             </th>
             </thead>
@@ -35,10 +34,10 @@
                     <td>
                         {{ page.folder }}
                     </td>
-                    <td style="white-space: nowrap">
+                    <td class="text-nowrap">
                         {{ page.meta.date }}
                     </td>
-                    <td style="white-space: nowrap">
+                    <td class="text-nowrap">
                         <a href="{{ Url_backend('pages/edit/' ~ page.pageId) }}"
                            class="btn btn-primary btn-xs">
                             {{ 'siezi.phileAdminPages.btn.edit'|trans }}
@@ -54,4 +53,35 @@
             </tbody>
         </table>
     </div>
+
+    <script>
+        $(function() {
+
+            // these classes are added to the table. To see other table classes available,
+            $.tablesorter.themes.bootstrap.table = '';
+
+            $('table.tablesorter').tablesorter({
+                theme : "bootstrap",
+                widthFixed: true,
+                headerTemplate : '{content} {icon}',
+                // widget code contained in the jquery.tablesorter.widgets.js file
+                // use the zebra stripe widget if you plan on hiding any rows (filter widget)
+                widgets: ["uitheme", "filter"],
+                widgetOptions : {
+                    // extra css class name (string or array) added to the filter element (input or select)
+                    filter_cssFilter: "form-control",
+                    // include child row content while filtering, if true
+                    filter_childRows  : true,
+                    // search from beginning
+                    filter_startsWith : false,
+                    // Set this option to false to make the searches case sensitive
+                    filter_ignoreCase : true,
+                    // class for filtered rows
+                    filter_filteredRow: 'hidden'
+
+                }
+            });
+
+        })
+    </script>
 {% endblock %}
