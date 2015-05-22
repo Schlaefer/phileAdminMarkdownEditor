@@ -4,11 +4,16 @@ namespace Phile\Plugin\Siezi\PhileAdminMarkdownEditor;
 
 use Phile\Plugin\Siezi\PhileAdmin\Lib\AdminController;
 use Phile\Plugin\Siezi\PhileAdmin\Lib\Helper\StringHelper;
+use Phile\Plugin\Siezi\PhileAdmin\Lib\TranslationTrait;
 use Phile\Plugin\Siezi\PhileAdminMarkdownEditor\Lib\DraftRepository;
 use Symfony\Component\HttpFoundation\Request;
 
 class AdminMarkdownEditor extends AdminController
 {
+
+    use TranslationTrait {
+        trans as traitTrans;
+    }
 
     protected function getRoutes($controllers)
     {
@@ -27,7 +32,7 @@ class AdminMarkdownEditor extends AdminController
     public function index()
     {
         $getFolder = function ($type) {
-            $repository = $this->app['siezi.phileAmdinMarkdownEditor.contentRepositoryFactory']($type);
+            $repository = $this->getRepository($type);
             $options = ['pages_order' => 'meta.date:desc page.filePath:asc'];
             $pages = $repository->findAll($options);
             return $pages;
@@ -49,10 +54,10 @@ class AdminMarkdownEditor extends AdminController
         $select = $this->getFolderSelect();
         $form = $this->app['form.factory']->createBuilder('form')
           ->add('title', 'text', [
-            'label' => $this->trans('siezi.phileAdminPages.label.title'),
+            'label' => $this->trans('label.title'),
           ])
           ->add('place', 'choice', [
-            'label' => $this->trans('siezi.phileAdminPages.label.place'),
+            'label' => $this->trans('label.place'),
             'choices' => $select
           ])
           ->getForm();
@@ -70,7 +75,7 @@ Date: ' . date('Y-m-d') . '
 -->
 
 #' . $title . '#';
-            $repo = $this->app['siezi.phileAmdinMarkdownEditor.contentRepositoryFactory']($type);
+            $repo = $this->getRepository($type);
             try {
                 $title = StringHelper::slug($title);
                 $page = $repo->create($title, $folder, $content);
@@ -97,7 +102,7 @@ Date: ' . date('Y-m-d') . '
      */
     public function edit($type, $pageId)
     {
-        $repository = $this->app['siezi.phileAmdinMarkdownEditor.contentRepositoryFactory']($type);
+        $repository = $this->getRepository($type);
         try {
             $page = $repository->findByPath($pageId);
         } catch (\Exception $e) {
@@ -119,15 +124,15 @@ Date: ' . date('Y-m-d') . '
         $form = $this->app['form.factory']
           ->createBuilder('form', $data, ['csrf_protection' => false])
           ->add('name', 'text', [
-              'label' => $this->trans('siezi.phileAdminPages.label.title')
+              'label' => $this->trans('label.title')
           ])
           ->add('place', 'choice', [
               'choices' => $this->getFolderSelect(),
-              'label' => $this->trans('siezi.phileAdminPages.label.place'),
+              'label' => $this->trans('label.place'),
               'data' => $currentPlace
           ])
           ->add('content', 'textarea', [
-            'label' => $this->trans('siezi.phileAdminPages.label.content')
+            'label' => $this->trans('label.content')
           ])
           ->getForm();
 
@@ -137,7 +142,7 @@ Date: ' . date('Y-m-d') . '
             $data = $form->getData();
             $successMsg = function() {
                 $this->flash(
-                  $this->trans('siezi.phileAdminPages.message.saved.success'),
+                  $this->trans('message.saved.success'),
                   'success'
                 );
             };
@@ -149,7 +154,7 @@ Date: ' . date('Y-m-d') . '
             } catch (\Exception $e) {
                 $errors = true;
                 $this->flash(
-                  $this->trans('siezi.phileAdminPages.message.saved.failure'),
+                  $this->trans('message.saved.failure'),
                   'error'
                 );
             }
@@ -166,7 +171,7 @@ Date: ' . date('Y-m-d') . '
                         $targetType = 'content';
                         $targetPageId = $data['place'] . '/' . $targetPageId ;
                     }
-                    $target = $this->app['siezi.phileAmdinMarkdownEditor.contentRepositoryFactory']($targetType);
+                    $target = $this->getRepository($targetType);
 
                     $target->add($page, $targetPageId);
                     $repository->delete($page);
@@ -176,7 +181,7 @@ Date: ' . date('Y-m-d') . '
                 } catch (\Exception $e) {
                     $errors = true;
                     $this->flash(
-                      $this->trans('siezi.phileAdminPages.message.moved.failure'),
+                      $this->trans('message.moved.failure'),
                       'error'
                     );
                 }
@@ -208,10 +213,10 @@ Date: ' . date('Y-m-d') . '
         if ($form->isValid()) {
             try {
                 $data = $form->getData();
-                $source = $this->app['siezi.phileAmdinMarkdownEditor.contentRepositoryFactory']($data['type']);
+                $source = $this->getRepository($data['type']);
                 $page = $source->findByPath($data['pageId']);
 
-                $target = $this->app['siezi.phileAmdinMarkdownEditor.contentRepositoryFactory']('trash');
+                $target = $this->getRepository('trash');
                 $pageId = StringHelper::slug($page->getContentFolderRelativeFolder())
                   . '-' . basename($page->getPageId())
                   . '-' . time();
@@ -225,12 +230,12 @@ Date: ' . date('Y-m-d') . '
         }
         if ($success) {
             $this->flash(
-              $this->trans('siezi.phileAdminPages.message.trash.success'),
+              $this->trans('message.trash.success'),
               'success'
             );
         } else {
             $this->flash(
-              $this->trans('siezi.phileAdminPages.message.trash.failure'),
+              $this->trans('message.trash.failure'),
               'error'
             );
         }
@@ -249,13 +254,21 @@ Date: ' . date('Y-m-d') . '
 
     protected function getFolderSelect()
     {
-        $repository = $this->app['siezi.phileAmdinMarkdownEditor.contentRepositoryFactory']('content');
+        $repository = $this->getRepository('content');
         $folders = [
-          'draft' => $this->trans('siezi.phileAdminPages.place.draft'),
-          $this->trans('siezi.phileAdminPages.place.content') => $repository->getExistingFolders()
+          'draft' => $this->trans('place.draft'),
+          $this->trans('place.content') => $repository->getExistingFolders()
         ];
 
         return $folders;
+    }
+
+    protected function trans($string) {
+        return $this->traitTrans('siezi.phileAdminPages.' . $string);
+    }
+
+    protected function getRepository($type) {
+        return $this->app['siezi.phileAmdinMarkdownEditor.contentRepositoryFactory']($type);
     }
 
 }
