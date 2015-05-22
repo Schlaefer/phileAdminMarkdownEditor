@@ -133,6 +133,7 @@ Date: ' . date('Y-m-d') . '
 
         $form->handleRequest($this->app['request']);
         if ($form->isValid()) {
+            $errors = false;
             $data = $form->getData();
             $successMsg = function() {
                 $this->flash(
@@ -174,10 +175,6 @@ Date: ' . date('Y-m-d') . '
                     return $this->redirect("pages/edit/{$targetType}/{$targetPageId}");
                 } catch (\Exception $e) {
                     $errors = true;
-                    $this->flash(
-                      $this->trans('siezi.phileAdminPages.message.saved.success'),
-                      'success'
-                    );
                     $this->flash(
                       $this->trans('siezi.phileAdminPages.message.moved.failure'),
                       'error'
