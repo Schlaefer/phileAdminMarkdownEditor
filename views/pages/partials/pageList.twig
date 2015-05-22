@@ -1,0 +1,140 @@
+{% set id = random() %}
+
+{% if actions is not defined %}
+    {% set actions = {} %}
+{% endif %}
+{% set actions = {'edit': true, 'view': true, 'trash': true}|merge(actions) %}
+
+<table id="table-{{ id }}" class="table table-hover tablesorter">
+    <thead>
+    <th class="col-md-4">
+        {{ 'siezi.phileAdminPages.label.title'|trans }}
+    </th>
+    <th class="col-md-4">
+        {{ 'siezi.phileAdminPages.label.path'|trans }}
+    </th>
+    <th>
+        {{ 'siezi.phileAdminPages.label.date'|trans }}
+    </th>
+    <th data-sorter="false" data-filter="false">
+        {{ 'siezi.phileAdminPages.label.action'|trans }}
+    </th>
+    </thead>
+    <tbody>
+    {% for page in pages %}
+        <tr>
+            <td>
+                {{ page.title }}
+            </td>
+            <td>
+                {{ page.contentFolderRelativePath }}
+            </td>
+            <td class="text-nowrap">
+                {{ page.meta.date }}
+            </td>
+            <td>
+                <div class="text-nowrap">
+                    {% if actions.edit %}
+                        <a href="{{ Url_backend('pages/edit/' ~ base ~ '/' ~ page.pageId) }}"
+                           class="btn btn-primary btn-xs">
+                            {{ 'siezi.phileAdminPages.btn.edit'|trans }}
+                        </a>
+                    {% endif %}
+                    {% if actions.view %}
+                        <a href="{{ Url_phile(page.url) }}"
+                           class="btn btn-default btn-xs"
+                           target="_blank">
+                            {{ 'siezi.phileAdminPages.btn.view'|trans }}
+                        </a>
+                    {% endif %}
+                    {% if actions.trash %}
+                        <button data-toggle="modal"
+                                data-target="#trashModal-{{ id }}-{{ String_slug(page.pageId) }}"
+                                class="btn btn-danger btn-xs">
+                            {{ 'siezi.phileAdminPages.btn.trash'|trans }}
+                        </button>
+                    {% endif %}
+                </div>
+
+                {% if actions.trash %}
+                    <div class="modal fade"
+                         id="trashModal-{{ id }}-{{ String_slug(page.pageId) }}"
+                         tabindex="-1" role="dialog"
+                         aria-labelledby="myModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close"
+                                            data-dismiss="modal"
+                                            aria-label="Close"><span
+                                                aria-hidden="true">&times;</span>
+                                    </button>
+                                    <h4 class="modal-title" id="myModalLabel">
+                                        {{ 'siezi.phileAdminPages.modal.trash.heading'|trans }}
+                                    </h4>
+                                </div>
+                                <div class="modal-body">
+                                    <p>
+                                        {{ 'siezi.phileAdminPages.modal.trash.exp'|trans({'%title%': page.title, '%file%': page.contentFolderRelativePath }) }}
+                                    </p>
+                                </div>
+                                <div class="modal-footer">
+                                    <form action="{{ path('pages/trash') }}"
+                                          method="post">
+                                        <input type="hidden" name="form[pageId]"
+                                               value="{{ page.pageId }}">
+                                        <input type="hidden" name="form[type]"
+                                               value="{{ base }}">
+                                        <input type="hidden" name="form[_token]"
+                                               value="{{ csrf_token('form') }}"
+                                                >
+                                        <button type="submit"
+                                                class="btn btn-danger">
+                                            {{ 'siezi.phileAdminPages.btn.trash'|trans }}
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                {% endif %}
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+<script>
+    $(function() {
+        var tableId = '#table-{{ id }}';
+        var nRows = {{ pages|length }};
+        var options = {
+            theme: "bootstrap",
+            widthFixed: true,
+            headerTemplate: '{content} {icon}',
+            // widget code contained in the jquery.tablesorter.widgets.js file
+            // use the zebra stripe widget if you plan on hiding any rows (filter widget)
+            widgets: ["uitheme"],
+            widgetOptions: {
+                // extra css class name (string or array) added to the filter element (input or select)
+                filter_cssFilter: "form-control",
+                // include child row content while filtering, if true
+                filter_childRows: true,
+                // search from beginning
+                filter_startsWith: false,
+                // Set this option to false to make the searches case sensitive
+                filter_ignoreCase: true,
+                // class for filtered rows
+                filter_filteredRow: 'hidden'
+            }
+        };
+        // filter on long tables
+        if (nRows > 10) {
+            options.widgets.push('filter');
+        }
+        // these classes are added to the table. To see other table classes available,
+        $.tablesorter.themes.bootstrap.table = '';
+        $(tableId).tablesorter(options);
+    });
+</script>

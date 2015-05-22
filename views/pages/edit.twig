@@ -15,6 +15,18 @@
 {% block content %}
     <form action="#" method="post">
         <div class="form-group">
+            {{ form_label(form.name) }}
+            <div class="input-group">
+                {{ form_widget(form.name, {'attr': {'class': 'form-control'}}) }}
+                <div class="input-group-addon">{{ contentExt }}</div>
+            </div>
+        </div>
+        <div class="form-group">
+            {{ form_label(form.place) }}
+            {{ form_widget(form.place, {'attr': {'class': 'form-control'}}) }}
+        </div>
+        <div class="form-group">
+            {{ form_label(form.content) }}
             {{ form_widget(form.content, {'attr': {'class': 'form-control'}}) }}
         </div>
         <input type="submit" name="submit" class="btn btn-primary" value="{{ 'siezi.phileAdminPages.btn.savePage'|trans }}"/>
