@@ -4,6 +4,8 @@
 
 A markdown editor plugin for [Phile-Admin](https://github.com/Schlaefer/phileAdmin).
 
+![screenshot](screenshot.png)
+
 ## Installation
 
 ### 1 Installation (composer) ###
