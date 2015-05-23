@@ -2,9 +2,19 @@
 
 ## What ##
 
-A markdown editor plugin for [Phile-Admin](https://github.com/Schlaefer/phileAdmin).
+A markdown editor plugin for [Phile-Admin].
+
+- Create new pages
+- Edit pages
+- Move pages between folders
+- Draft non-public pages
+- Remove pages (files are not actually deleted but moved to special trash folder)
+
+The page index:
 
 ![Page Index](screenshot.png)
+
+The editor:
 
 ![Editor](screenshot2.png)
 
@@ -29,12 +39,16 @@ A markdown editor plugin for [Phile-Admin](https://github.com/Schlaefer/phileAdm
 
 ### 2. Activation
 
-After you have installed the plugin. You need to add the following line to your `config.php` file:
+After you have installed the plugin you activate it by adding the following line to your `config.php` file:
 
 ```php
 $config['plugins']['siezi\\phileAdminMarkdownEditor'] = ['active' => true];
 ```
 
+This plugin depends on [Phile-Admin]. Make it's activated too.
+
 ### 3. Config ###
 
 See `config.php`.
+
+[Phile-Admin]: https://github.com/Schlaefer/phileAdmin
