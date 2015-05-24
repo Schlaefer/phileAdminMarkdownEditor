@@ -45,7 +45,7 @@ After you have installed the plugin you activate it by adding the following line
 $config['plugins']['siezi\\phileAdminMarkdownEditor'] = ['active' => true];
 ```
 
-This plugin depends on [Phile-Admin]. Make it's activated too.
+This plugin depends on [Phile-Admin]. Make sure it’s activated too.
 
 ### 3. Config ###
 
