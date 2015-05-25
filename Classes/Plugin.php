@@ -24,7 +24,7 @@ class Plugin extends AbstractPlugin
         $adminPlugin
           ->setMenu('siezi.phileAdminPages.title', '/pages')
           ->setLocalesFolder($this->getPluginPath('locales'))
-          ->setTemplateFolder($this->getPluginPath('views'))
+          ->setTemplateFolder($this->getPluginPath('templates'))
           ->setRoutes(['/pages' => new AdminMarkdownEditor()]);
         $eventData['plugins']->add($adminPlugin);
     }
