@@ -6,7 +6,7 @@
   "homepage": "https://github.com/Schlaefer/phileAdminMarkdownEditor",
   "keywords": ["phile", "admin", "backend", "markdown"],
   "require": {
-    "siezi/phile-admin": "^0.2.2",
+    "siezi/phile-admin": "^1.0.1",
     "cakephp/filesystem": "^3.0"
   }
 }
