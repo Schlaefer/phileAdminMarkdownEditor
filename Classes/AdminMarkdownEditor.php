@@ -5,8 +5,6 @@ namespace Phile\Plugin\Siezi\PhileAdminMarkdownEditor;
 use Phile\Plugin\Siezi\PhileAdmin\Lib\AdminController;
 use Phile\Plugin\Siezi\PhileAdmin\Lib\Helper\StringHelper;
 use Phile\Plugin\Siezi\PhileAdmin\Lib\TranslationTrait;
-use Phile\Plugin\Siezi\PhileAdminMarkdownEditor\Lib\DraftRepository;
-use Symfony\Component\HttpFoundation\Request;
 
 class AdminMarkdownEditor extends AdminController
 {

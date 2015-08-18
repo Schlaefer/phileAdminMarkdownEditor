@@ -3,10 +3,12 @@
 namespace Phile\Plugin\Siezi\PhileAdminMarkdownEditor\Lib;
 
 use Cake\Filesystem\Folder;
+use Phile\Model\Page;
 use Phile\Plugin\Siezi\PhileAdmin\Lib\Helper\StringHelper;
-use Phile\Repository\Page;
+use Phile\Repository\Page as Repository;
+use Phile\Repository\PageCollection;
 
-class ContentRepository extends Page
+class ContentRepository extends Repository
 {
 
     protected $contentExt;
@@ -152,17 +154,27 @@ class ContentRepository extends Page
         return $this->findByPath($relative);
     }
 
+
+    /**
+     * Create PageDecorator objects
+     *
+     * @param Page|PageCollection $pages pages to decorate
+     * @return PageDecorator|PageCollection
+     */
     protected function decorate($pages)
     {
-        if (is_array($pages)) {
+        if ($pages instanceof PageCollection) {
+            $new = [];
             foreach ($pages as $key => $page) {
-                $pages[$key] = $this->decorate($page);
+                $new[$key] = $this->decorate($page);
             }
-
-            return $pages;
+            return new PageCollection(function () use ($new) {
+                return $new;
+            });
+        } elseif ($pages instanceof Page) {
+            return new PageDecorator($pages);
         }
-
-        return new PageDecorator($pages);
+        throw new \InvalidArgumentException();
     }
 
     protected function slug($text)
